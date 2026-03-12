@@ -1,6 +1,6 @@
 package com.gildedrose;
 
-public class AgedBrie extends Item implements Updatable{
+public class AgedBrie extends ItemWrapper {
     public AgedBrie(int sellIn, int quality) {
         super("Aged Brie", sellIn, quality);
     }

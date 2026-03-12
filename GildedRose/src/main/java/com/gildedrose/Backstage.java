@@ -1,6 +1,6 @@
 package com.gildedrose;
 
-public class Backstage extends Item implements Updatable{
+public class Backstage extends ItemWrapper {
     public Backstage(int sellIn, int quality) {
         super("Backstage passes to a TAFKAL80ETC concert", sellIn, quality);
     }
