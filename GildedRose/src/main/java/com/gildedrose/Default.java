@@ -1,6 +1,6 @@
 package com.gildedrose;
 
-public class Default extends Item{
+public class Default extends Item implements Updatable{
     public Default(String name, int sellIn, int quality) {
         super(name, sellIn, quality);
     }
