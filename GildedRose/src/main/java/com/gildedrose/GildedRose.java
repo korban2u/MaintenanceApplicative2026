@@ -14,7 +14,7 @@ class GildedRose {
             switch (item.name) {
                 case "Aged Brie" -> updateAgedBrie(item);
                 case "Backstage passes to a TAFKAL80ETC concert" -> updateBackstagePasses(item);
-                default -> updateDelfaut(item);
+                default -> updateDefault(item);
             }
         }
     }
@@ -49,7 +49,7 @@ class GildedRose {
         }
     }
 
-    public void updateDelfaut(Item item) {
+    public void updateDefault(Item item) {
         if (item.quality > 0) {
             item.quality--;
         }
