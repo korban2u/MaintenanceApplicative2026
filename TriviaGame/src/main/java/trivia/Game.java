@@ -13,7 +13,6 @@ public class Game implements IGame {
    LinkedList<String> rockQuestions = new LinkedList<>();
 
    int currentPlayer = 0;
-   boolean isGettingOutOfPenaltyBox;
 
    public Game() {
       for (int i = 0; i < 50; i++) {
@@ -47,18 +46,17 @@ public class Game implements IGame {
 
       if (player.isInPenaltyBox()) {
          if (roll % 2 != 0) {
-            isGettingOutOfPenaltyBox = true;
+            player.setGettingOutOfPenaltyBox(true);
             System.out.println(player.getName() + " is getting out of the penalty box");
             movePlayerAndAskQuestion(player, roll);
          } else {
             System.out.println(player.getName() + " is not getting out of the penalty box");
-            isGettingOutOfPenaltyBox = false;
+            player.setGettingOutOfPenaltyBox(false);
          }
       } else {
          movePlayerAndAskQuestion(player, roll);
       }
    }
-
    private void movePlayerAndAskQuestion(Player player, int roll) {
       player.setPlace(player.getPlace() + roll);
       if (player.getPlace() > 12) {
@@ -73,15 +71,20 @@ public class Game implements IGame {
    private void askQuestion(Player player) {
       String category = currentCategory(player);
 
-      if ("Pop".equals(category)) {
-         System.out.println(popQuestions.removeFirst());
-      } else if ("Science".equals(category)) {
-         System.out.println(scienceQuestions.removeFirst());
-      } else if ("Sports".equals(category)) {
-         System.out.println(sportsQuestions.removeFirst());
-      } else if ("Rock".equals(category)) {
-         System.out.println(rockQuestions.removeFirst());
-      }
+       switch (category) {
+           case "Pop":
+               System.out.println(popQuestions.removeFirst());
+               break;
+           case "Science":
+               System.out.println(scienceQuestions.removeFirst());
+               break;
+           case "Sports":
+               System.out.println(sportsQuestions.removeFirst());
+               break;
+           case "Rock":
+               System.out.println(rockQuestions.removeFirst());
+               break;
+       }
    }
 
    private String currentCategory(Player player) {
@@ -93,7 +96,8 @@ public class Game implements IGame {
 
    public boolean handleCorrectAnswer() {
       Player player = players.get(currentPlayer);
-      if (player.isInPenaltyBox() && !isGettingOutOfPenaltyBox) {
+
+      if (player.isInPenaltyBox() && !player.isGettingOutOfPenaltyBox()) {
          nextPlayer();
          return true;
       }
