@@ -28,12 +28,20 @@ public class Game implements IGame {
    }
 
    public boolean add(String playerName) {
-      if (howManyPlayers() >= 6) {
-         System.out.println("Impossible d'ajouter " + playerName + " : la partie est pleine.");
+      if (players.size() >= 6) {
+         System.out.println("Cannot add " + playerName + ". Maximum 6 players allowed.");
          return false;
       }
 
+      for (Player p : players) {
+         if (p.getName().equals(playerName)) {
+            System.out.println("Cannot add " + playerName + ". Name already taken.");
+            return false;
+         }
+      }
+
       players.add(new Player(playerName));
+
       System.out.println(playerName + " was added");
       System.out.println("They are player number " + players.size());
       return true;

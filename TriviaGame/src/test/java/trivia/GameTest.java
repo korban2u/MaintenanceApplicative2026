@@ -196,4 +196,15 @@ public class GameTest {
 		assertFalse(game.add("P7"), "Le jeu ne devrait pas accepter un 7ème joueur");
 		assertEquals(6, game.getPlayers().size(), "Il ne devrait y avoir que 6 joueurs dans la liste");
 	}
+
+	@Test
+	public void cannot_add_two_players_with_the_same_name() {
+		Game game = new Game();
+
+		assertTrue(game.add("Alice"));
+
+		assertFalse(game.add("Alice"), "Le jeu ne devrait pas accepter un deuxième joueur avec le même nom");
+
+		assertEquals(1, game.getPlayers().size(), "Il ne devrait y avoir qu'un seul joueur dans la liste");
+	}
 }
