@@ -146,4 +146,8 @@ public class Game implements IGame {
    private boolean isGameInProgress() {
       return players.get(currentPlayer).getPurse() != 6;
    }
+
+   public List<Player> getPlayers() {
+      return players;
+   }
 }

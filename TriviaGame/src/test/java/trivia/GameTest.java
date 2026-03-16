@@ -1,14 +1,14 @@
 
 package trivia;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Random;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class GameTest {
@@ -61,6 +61,124 @@ public class GameTest {
 			System.setOut(old);
 		}
 
-		return new String(baos.toByteArray());
+		return baos.toString();
+	}
+
+	@Test
+	public void playable_at_least_two_players() {
+		Game game = new Game();
+
+		assertFalse(game.isPlayable());
+
+		game.add("Alice");
+		assertFalse(game.isPlayable());
+
+		game.add("Bob");
+		assertTrue(game.isPlayable());
+	}
+
+	@Test
+	public void adding_player_sets_correct_initial_state() {
+		Game game = new Game();
+		game.add("Cédric");
+
+		assertEquals(1, game.getPlayers().size());
+
+		Player player = game.getPlayers().get(0);
+		assertEquals("Cédric", player.getName());
+		assertEquals(1, player.getPlace(), "Un joueur devrait commencer sur la case 1");
+		assertEquals(0, player.getPurse(), "Un joueur devrait commencer avec 0 pièce");
+		assertFalse(player.isInPenaltyBox(), "Un joueur ne devrait pas commencer en prison");
+	}
+
+	@Test
+	public void rolling_moves_player_forward() {
+		Game game = new Game();
+		game.add("David");
+
+		game.roll(3);
+
+		Player player = game.getPlayers().get(0);
+		assertEquals(4, player.getPlace(), "Le joueur devrait être sur la case 4 (1 + 3)");
+	}
+
+	@Test
+	public void rolling_past_12_wraps_around() {
+		Game game = new Game();
+		game.add("Emma");
+
+		Player player = game.getPlayers().get(0);
+		player.setPlace(11);
+
+		game.roll(4);
+
+		assertEquals(3, player.getPlace(), "Le joueur devrait atterrir sur la case 3 après avoir dépassé 12");
+	}
+
+	@Test
+	public void correct_answer_checks_win_condition() {
+		Game game = new Game();
+		game.add("Fanny");
+		game.add("Greg");
+
+		Player player = game.getPlayers().get(0);
+
+		for(int i=0; i<5; i++) {
+			player.addCoin();
+		}
+		assertEquals(5, player.getPurse());
+
+		boolean isGameStillInProgress = game.handleCorrectAnswer();
+
+		assertEquals(6, player.getPurse(), "Le joueur devrait avoir 6 pièces");
+		assertFalse(isGameStillInProgress, "Le jeu devrait être terminé (false) car le joueur a gagné");
+	}
+
+	@Test
+	public void wrong_answer_sends_player_to_penalty_box() {
+		Game game = new Game();
+		game.add("Hugo");
+		game.add("Isabelle");
+
+		game.wrongAnswer();
+
+		Player hugo = game.getPlayers().get(0);
+		assertTrue(hugo.isInPenaltyBox(), "Le joueur devrait être envoyé en prison après une mauvaise réponse");
+	}
+
+	@Test
+	public void player_in_penalty_box_rolling_even_stays_in_box() {
+		Game game = new Game();
+		game.add("Jack");
+		game.add("Karen");
+
+		Player jack = game.getPlayers().get(0);
+		jack.setInPenaltyBox(true);
+		int initialPlace = jack.getPlace();
+
+		game.roll(4);
+		game.handleCorrectAnswer();
+
+		assertEquals(initialPlace, jack.getPlace(), "Le joueur ne doit pas bouger");
+		assertEquals(0, jack.getPurse(), "Le joueur ne doit pas gagner de pièce");
+		assertTrue(jack.isInPenaltyBox(), "Le joueur doit rester en prison");
+	}
+
+	@Test
+	public void player_penalty_box_rolling_odd_gets_out_and_plays() {
+		Game game = new Game();
+		game.add("Leo");
+		game.add("Mia");
+
+		Player leo = game.getPlayers().get(0);
+		leo.setInPenaltyBox(true);
+		leo.setPlace(1);
+
+		game.roll(3);
+		game.handleCorrectAnswer();
+
+		assertEquals(4, leo.getPlace(), "Le joueur a dû avancer (1 + 3)");
+		assertEquals(1, leo.getPurse(), "Le joueur a dû gagner une pièce");
+		assertFalse(leo.isInPenaltyBox(), "Le joueur doit être libéré de la prison");
 	}
 }
