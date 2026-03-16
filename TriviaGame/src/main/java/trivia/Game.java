@@ -83,27 +83,28 @@ public class Game implements IGame {
    }
 
    private void askQuestion() {
-      if (currentCategory() == "Pop")
-         System.out.println(popQuestions.removeFirst());
-      if (currentCategory() == "Science")
-         System.out.println(scienceQuestions.removeFirst());
-      if (currentCategory() == "Sports")
-         System.out.println(sportsQuestions.removeFirst());
-      if (currentCategory() == "Rock")
-         System.out.println(rockQuestions.removeFirst());
+      String category = currentCategory();
+       switch (category) {
+           case "Pop":
+               System.out.println(popQuestions.removeFirst());
+               break;
+           case "Science":
+               System.out.println(scienceQuestions.removeFirst());
+               break;
+           case "Sports":
+               System.out.println(sportsQuestions.removeFirst());
+               break;
+           case "Rock":
+               System.out.println(rockQuestions.removeFirst());
+               break;
+       }
    }
 
 
    private String currentCategory() {
-      if (places[currentPlayer] - 1 == 0) return "Pop";
-      if (places[currentPlayer] - 1 == 4) return "Pop";
-      if (places[currentPlayer] - 1 == 8) return "Pop";
-      if (places[currentPlayer] - 1 == 1) return "Science";
-      if (places[currentPlayer] - 1 == 5) return "Science";
-      if (places[currentPlayer] - 1 == 9) return "Science";
-      if (places[currentPlayer] - 1 == 2) return "Sports";
-      if (places[currentPlayer] - 1 == 6) return "Sports";
-      if (places[currentPlayer] - 1 == 10) return "Sports";
+      if (places[currentPlayer] % 4 == 1) return "Pop";
+      if (places[currentPlayer] % 4 == 2) return "Science";
+      if (places[currentPlayer] % 4 == 3) return "Sports";
       return "Rock";
    }
 
