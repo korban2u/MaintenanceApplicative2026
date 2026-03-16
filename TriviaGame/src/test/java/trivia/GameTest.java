@@ -181,4 +181,19 @@ public class GameTest {
 		assertEquals(1, leo.getPurse(), "Le joueur a dû gagner une pièce");
 		assertFalse(leo.isInPenaltyBox(), "Le joueur doit être libéré de la prison");
 	}
+
+	@Test
+	public void cannot_add_more_than_6_players() {
+		Game game = new Game();
+
+		assertTrue(game.add("P1"));
+		assertTrue(game.add("P2"));
+		assertTrue(game.add("P3"));
+		assertTrue(game.add("P4"));
+		assertTrue(game.add("P5"));
+		assertTrue(game.add("P6"));
+
+		assertFalse(game.add("P7"), "Le jeu ne devrait pas accepter un 7ème joueur");
+		assertEquals(6, game.getPlayers().size(), "Il ne devrait y avoir que 6 joueurs dans la liste");
+	}
 }
