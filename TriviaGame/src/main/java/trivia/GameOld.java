@@ -17,13 +17,13 @@ public class GameOld implements IGame {
    LinkedList rockQuestions = new LinkedList();
 
    int currentPlayer = 0;
-   boolean isGettingOutOfPenaltyBox;
+   boolean[] isGettingOutOfPenaltyBox = new boolean[6];
 
    public GameOld() {
       for (int i = 0; i < 50; i++) {
          popQuestions.addLast("Pop Question " + i);
-         scienceQuestions.addLast(("Science Question " + i));
-         sportsQuestions.addLast(("Sports Question " + i));
+         scienceQuestions.addLast("Science Question " + i);
+         sportsQuestions.addLast("Sports Question " + i);
          rockQuestions.addLast(createRockQuestion(i));
       }
    }
@@ -57,7 +57,7 @@ public class GameOld implements IGame {
 
       if (inPenaltyBox[currentPlayer]) {
          if (roll % 2 != 0) {
-            isGettingOutOfPenaltyBox = true;
+            isGettingOutOfPenaltyBox[currentPlayer] = true;
 
             System.out.println(players.get(currentPlayer) + " is getting out of the penalty box");
             places[currentPlayer] = places[currentPlayer] + roll;
@@ -70,7 +70,7 @@ public class GameOld implements IGame {
             askQuestion();
          } else {
             System.out.println(players.get(currentPlayer) + " is not getting out of the penalty box");
-            isGettingOutOfPenaltyBox = false;
+            isGettingOutOfPenaltyBox[currentPlayer] = false;
          }
 
       } else {
@@ -114,7 +114,7 @@ public class GameOld implements IGame {
 
    public boolean handleCorrectAnswer() {
       if (inPenaltyBox[currentPlayer]) {
-         if (isGettingOutOfPenaltyBox) {
+         if (isGettingOutOfPenaltyBox[currentPlayer]) {
             System.out.println("Answer was correct!!!!");
             purses[currentPlayer]++;
             System.out.println(players.get(currentPlayer)

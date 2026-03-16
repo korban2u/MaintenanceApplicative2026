@@ -28,8 +28,12 @@ public class Game implements IGame {
    }
 
    public boolean add(String playerName) {
-      players.add(new Player(playerName));
+      if (howManyPlayers() >= 6) {
+         System.out.println("Impossible d'ajouter " + playerName + " : la partie est pleine.");
+         return false;
+      }
 
+      players.add(new Player(playerName));
       System.out.println(playerName + " was added");
       System.out.println("They are player number " + players.size());
       return true;
@@ -70,21 +74,29 @@ public class Game implements IGame {
 
    private void askQuestion(Player player) {
       String category = currentCategory(player);
+      String question;
 
-       switch (category) {
-           case "Pop":
-               System.out.println(popQuestions.removeFirst());
-               break;
-           case "Science":
-               System.out.println(scienceQuestions.removeFirst());
-               break;
-           case "Sports":
-               System.out.println(sportsQuestions.removeFirst());
-               break;
-           case "Rock":
-               System.out.println(rockQuestions.removeFirst());
-               break;
-       }
+      switch (category) {
+         case "Pop":
+            question = popQuestions.removeFirst();
+            popQuestions.addLast(question);
+            break;
+         case "Science":
+            question = scienceQuestions.removeFirst();
+            scienceQuestions.addLast(question);
+            break;
+         case "Sports":
+            question = sportsQuestions.removeFirst();
+            sportsQuestions.addLast(question);
+            break;
+         case "Rock":
+            question = rockQuestions.removeFirst();
+            rockQuestions.addLast(question);
+            break;
+         default:
+            throw new IllegalStateException("Catégorie inconnue : " + category);
+      }
+      System.out.println(question);
    }
 
    private String currentCategory(Player player) {
