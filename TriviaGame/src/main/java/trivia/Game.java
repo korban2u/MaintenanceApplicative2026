@@ -1,25 +1,24 @@
 package trivia;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+
 
 public class Game implements IGame {
    List<Player> players = new ArrayList<>();
 
-   LinkedList<String> popQuestions = new LinkedList<>();
-   LinkedList<String> scienceQuestions = new LinkedList<>();
-   LinkedList<String> sportsQuestions = new LinkedList<>();
-   LinkedList<String> rockQuestions = new LinkedList<>();
-
    int currentPlayer = 0;
+   private boolean hasStarted = false;
+
+   private final Map<Category, LinkedList<String>> questionsByCategory = new HashMap<>();
 
    public Game() {
+      for (Category category : Category.values()) {
+         questionsByCategory.put(category, new LinkedList<>());
+      }
       for (int i = 0; i < 50; i++) {
-         popQuestions.addLast("Pop Question " + i);
-         scienceQuestions.addLast("Science Question " + i);
-         sportsQuestions.addLast("Sports Question " + i);
-         rockQuestions.addLast("Rock Question " + i);
+         for (Category category : Category.values()) {
+            questionsByCategory.get(category).addLast(category.getLabel() + " Question " + i);
+         }
       }
    }
 
@@ -28,6 +27,11 @@ public class Game implements IGame {
    }
 
    public boolean add(String playerName) {
+      if (hasStarted) {
+         System.out.println("Cannot add " + playerName + ". The game has already started.");
+         return false;
+      }
+
       if (players.size() >= 6) {
          System.out.println("Cannot add " + playerName + ". Maximum 6 players allowed.");
          return false;
@@ -52,6 +56,12 @@ public class Game implements IGame {
    }
 
    public void roll(int roll) {
+      if (players.size() < 2) {
+         throw new IllegalStateException("The game cannot start with less than 2 players.");
+      }
+
+      hasStarted = true;
+
       Player player = players.get(currentPlayer);
       System.out.println(player.getName() + " is the current player");
       System.out.println("They have rolled a " + roll);
@@ -76,42 +86,21 @@ public class Game implements IGame {
       }
 
       System.out.println(player.getName() + "'s new location is " + player.getPlace());
-      System.out.println("The category is " + currentCategory(player));
+      System.out.println("The category is " + currentCategory(player).getLabel());
       askQuestion(player);
    }
 
    private void askQuestion(Player player) {
-      String category = currentCategory(player);
-      String question;
+      Category category = currentCategory(player);
 
-      switch (category) {
-         case "Pop":
-            question = popQuestions.removeFirst();
-            popQuestions.addLast(question);
-            break;
-         case "Science":
-            question = scienceQuestions.removeFirst();
-            scienceQuestions.addLast(question);
-            break;
-         case "Sports":
-            question = sportsQuestions.removeFirst();
-            sportsQuestions.addLast(question);
-            break;
-         case "Rock":
-            question = rockQuestions.removeFirst();
-            rockQuestions.addLast(question);
-            break;
-         default:
-            throw new IllegalStateException("Catégorie inconnue : " + category);
-      }
-      System.out.println(question);
+      System.out.println(questionsByCategory.get(category).removeFirst());
    }
 
-   private String currentCategory(Player player) {
-      if (player.getPlace() % 4 == 1) return "Pop";
-      if (player.getPlace() % 4 == 2) return "Science";
-      if (player.getPlace() % 4 == 3) return "Sports";
-      return "Rock";
+   Category currentCategory(Player player) {
+      Category[] categories = Category.values();
+
+      int index = (player.getPlace() - 1) % categories.length;
+      return categories[index];
    }
 
    public boolean handleCorrectAnswer() {

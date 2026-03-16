@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTest {
 	@Test
+	@Disabled("y'a de nouvelle règles donc le test est explosé (Géographie, 6 joueurs, etc.)")
 	public void caracterizationTest() {
 		// runs 10.000 "random" games to see the output of old and new code mathces
 		for (int seed = 1; seed < 10_000; seed++) {
@@ -95,6 +96,7 @@ public class GameTest {
 	public void rolling_moves_player_forward() {
 		Game game = new Game();
 		game.add("David");
+		game.add("Zacharie");
 
 		game.roll(3);
 
@@ -106,6 +108,7 @@ public class GameTest {
 	public void rolling_past_12_wraps_around() {
 		Game game = new Game();
 		game.add("Emma");
+		game.add("Julien");
 
 		Player player = game.getPlayers().get(0);
 		player.setPlace(11);
@@ -206,5 +209,55 @@ public class GameTest {
 		assertFalse(game.add("Alice"), "Le jeu ne devrait pas accepter un deuxième joueur avec le même nom");
 
 		assertEquals(1, game.getPlayers().size(), "Il ne devrait y avoir qu'un seul joueur dans la liste");
+	}
+
+	@Test
+	public void game_cannot_start_with_less_than_two_players() {
+		Game game = new Game();
+		game.add("Alice");
+
+		Exception exception = assertThrows(IllegalStateException.class, () -> {
+			game.roll(3);
+		});
+
+		assertEquals("The game cannot start with less than 2 players.", exception.getMessage());
+	}
+
+	@Test
+	public void players_cannot_join_after_game_has_started() {
+		Game game = new Game();
+		game.add("Alice");
+		game.add("Bob");
+
+		game.roll(2);
+
+		assertFalse(game.add("Charlie"), "Le jeu ne devrait pas accepter de nouveaux joueurs après le premier lancer");
+		assertEquals(2, game.getPlayers().size(), "Il ne devrait y avoir que 2 joueurs au total");
+	}
+
+	@Test
+	public void categories_cycle_correctly_with_geography_added() {
+		Game game = new Game();
+		game.add("Alice");
+		game.add("Julien B");
+		Player player = game.getPlayers().get(0);
+
+		player.setPlace(1);
+		assertEquals(Category.POP, game.currentCategory(player));
+
+		player.setPlace(2);
+		assertEquals(Category.SCIENCE, game.currentCategory(player));
+
+		player.setPlace(3);
+		assertEquals(Category.SPORTS, game.currentCategory(player));
+
+		player.setPlace(4);
+		assertEquals(Category.ROCK, game.currentCategory(player));
+
+		player.setPlace(5);
+		assertEquals(Category.GEOGRAPHY, game.currentCategory(player));
+
+		player.setPlace(6);
+		assertEquals(Category.POP, game.currentCategory(player));
 	}
 }
