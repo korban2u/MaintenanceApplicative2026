@@ -102,10 +102,12 @@ public class Game implements IGame {
       player.addCoin();
       System.out.println(player.getName() + " now has " + player.getPurse() + " Gold Coins.");
 
-      boolean winner = didPlayerWin();
+      player.setInPenaltyBox(false);
+
+      boolean inProgress = isGameInProgress();
       nextPlayer();
 
-      return winner;
+      return inProgress;
    }
 
    public boolean wrongAnswer() {
@@ -125,7 +127,7 @@ public class Game implements IGame {
       }
    }
 
-   private boolean didPlayerWin() {
-      return !(players.get(currentPlayer).getPurse() == 6);
+   private boolean isGameInProgress() {
+      return players.get(currentPlayer).getPurse() != 6;
    }
 }
