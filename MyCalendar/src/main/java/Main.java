@@ -1,264 +1,227 @@
+import calendar.domain.*;
+import calendar.domain.value.*;
+
 import java.time.LocalDateTime;
 import java.time.temporal.WeekFields;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
         CalendarManager calendar = new CalendarManager();
         Scanner scanner = new Scanner(System.in);
-        String utilisateur = null;
-        boolean continuer = true;
+        String user = null;
 
-        String utilisateurs[] = new String[99];
-        String motsDePasses[] = new String[99];
-        int nbUtilisateurs = 0;
+        String[] usernames = new String[99];
+        String[] passwords = new String[99];
+        int userCount = 0;
 
         while (true) {
-
-            if (utilisateur == null) {
-                System.out.println("  _____         _                   _                __  __");
-                System.out.println(" / ____|       | |                 | |              |  \\/  |");
-                System.out.println(
-                        "| |       __ _ | |  ___  _ __    __| |  __ _  _ __  | \\  / |  __ _  _ __    __ _   __ _   ___  _ __");
-                System.out.println(
-                        "| |      / _` || | / _ \\| '_ \\  / _` | / _` || '__| | |\\/| | / _` || '_ \\  / _` | / _` | / _ \\| '__|");
-                System.out.println(
-                        "| |____ | (_| || ||  __/| | | || (_| || (_| || |    | |  | || (_| || | | || (_| || (_| ||  __/| |");
-                System.out.println(
-                        " \\_____| \\__,_||_| \\___||_| |_| \\__,_| \\__,_||_|    |_|  |_| \\__,_||_| |_| \\__,_| \\__, | \\___||_|");
-                System.out.println(
-                        "                                                                                   __/ |");
-                System.out.println(
-                        "                                                                                  |___/");
-
-                System.out.println("1 - Se connecter");
-                System.out.println("2 - Créer un compte");
-                System.out.println("Choix : ");
+            if (user == null) {
+                printBanner();
+                System.out.println("1 - Login");
+                System.out.println("2 - Create account");
+                System.out.print("Choice: ");
 
                 switch (scanner.nextLine()) {
                     case "1":
-                        System.out.print("Nom d'utilisateur: ");
-                        utilisateur = scanner.nextLine();
-
-                        if (utilisateur.equals("Roger")) {
-                            String motDePasse = scanner.nextLine();
-                            if (!motDePasse.equals("Chat")) {
-                                utilisateur = null;
-                            }
-                        } else {
-                            if (utilisateur.equals("Pierre")) {
-                                String motDePasse = scanner.nextLine();
-                                if (!motDePasse.equals("KiRouhl")) {
-                                    utilisateur = null;
-                                }
-                            } else {
-                                System.out.print("Mot de passe: ");
-                                String motDePasse = scanner.nextLine();
-
-                                for (int i = 0; i < nbUtilisateurs; i = i + 1) {
-                                    if (utilisateurs[i].equals(utilisateur) && motsDePasses[i].equals(motDePasse)) {
-                                        utilisateur = utilisateurs[i];
-                                    }
-                                }
+                        System.out.print("Username: ");
+                        String inputUser = scanner.nextLine();
+                        System.out.print("Password: ");
+                        String inputPass = scanner.nextLine();
+                        for (int i = 0; i < userCount; i++) {
+                            if (usernames[i].equals(inputUser) && passwords[i].equals(inputPass)) {
+                                user = usernames[i];
                             }
                         }
                         break;
-
                     case "2":
-                        System.out.print("Nom d'utilisateur: ");
-                        utilisateur = scanner.nextLine();
-                        System.out.print("Mot de passe: ");
-                        String motDePasse = scanner.nextLine();
-                        System.out.print("Répéter mot de passe: ");
-                        if (scanner.nextLine().equals(motDePasse)) {
-                            utilisateurs[nbUtilisateurs] = utilisateur;
-                            motsDePasses[nbUtilisateurs] = motDePasse;
-                            nbUtilisateurs = nbUtilisateurs + 1;
+                        System.out.print("Username: ");
+                        String newUser = scanner.nextLine();
+                        System.out.print("Password: ");
+                        String newPass = scanner.nextLine();
+                        System.out.print("Confirm password: ");
+                        if (scanner.nextLine().equals(newPass)) {
+                            usernames[userCount] = newUser;
+                            passwords[userCount] = newPass;
+                            userCount++;
+                            user = newUser;
                         } else {
-                            System.out.println("Les mots de passes ne correspondent pas...");
-                            utilisateur = null;
+                            System.out.println("Passwords do not match.");
                         }
                         break;
                 }
             }
 
-            while (continuer && utilisateur != null) {
-                System.out.println("\nBonjour, " + utilisateur);
-                System.out.println("=== Menu Gestionnaire d'Événements ===");
-                System.out.println("1 - Voir les événements");
-                System.out.println("2 - Ajouter un rendez-vous perso");
-                System.out.println("3 - Ajouter une réunion");
-                System.out.println("4 - Ajouter un évènement périodique");
-                System.out.println("5 - Se déconnecter");
-                System.out.print("Votre choix : ");
+            while (user != null) {
+                System.out.println("\nHello, " + user);
+                System.out.println("=== Calendar Manager ===");
+                System.out.println("1 - View events");
+                System.out.println("2 - Add appointment");
+                System.out.println("3 - Add meeting");
+                System.out.println("4 - Add periodic event");
+                System.out.println("5 - Delete event");
+                System.out.println("6 - Logout");
+                System.out.print("Choice: ");
 
-                String choix = scanner.nextLine();
-
-                switch (choix) {
+                switch (scanner.nextLine()) {
                     case "1":
-                        System.out.println("\n=== Menu de visualisation d'Événements ===");
-                        System.out.println("1 - Afficher TOUS les événements");
-                        System.out.println("2 - Afficher les événements d'un MOIS précis");
-                        System.out.println("3 - Afficher les événements d'une SEMAINE précise");
-                        System.out.println("4 - Afficher les événements d'un JOUR précis");
-                        System.out.println("5 - Retour");
-                        System.out.print("Votre choix : ");
-
-                        choix = scanner.nextLine();
-
-                        switch (choix) {
-                            case "1":
-                                calendar.afficherEvenements();
-                                break;
-
-                            case "2":
-                                System.out.print("Entrez l'année (AAAA) : ");
-                                int anneeMois = Integer.parseInt(scanner.nextLine());
-                                System.out.print("Entrez le mois (1-12) : ");
-                                int mois = Integer.parseInt(scanner.nextLine());
-
-                                LocalDateTime debutMois = LocalDateTime.of(anneeMois, mois, 1, 0, 0);
-                                LocalDateTime finMois = debutMois.plusMonths(1).minusSeconds(1);
-
-                                afficherListe(calendar.eventsDansPeriode(debutMois, finMois));
-                                break;
-
-                            case "3":
-                                System.out.print("Entrez l'année (AAAA) : ");
-                                int anneeSemaine = Integer.parseInt(scanner.nextLine());
-                                System.out.print("Entrez le numéro de semaine (1-52) : ");
-                                int semaine = Integer.parseInt(scanner.nextLine());
-
-                                LocalDateTime debutSemaine = LocalDateTime.now()
-                                        .withYear(anneeSemaine)
-                                        .with(WeekFields.of(Locale.FRANCE).weekOfYear(), semaine)
-                                        .with(WeekFields.of(Locale.FRANCE).dayOfWeek(), 1)
-                                        .withHour(0).withMinute(0);
-                                LocalDateTime finSemaine = debutSemaine.plusDays(7).minusSeconds(1);
-
-                                afficherListe(calendar.eventsDansPeriode(debutSemaine, finSemaine));
-                                break;
-
-                            case "4":
-                                System.out.print("Entrez l'année (AAAA) : ");
-                                int anneeJour = Integer.parseInt(scanner.nextLine());
-                                System.out.print("Entrez le mois (1-12) : ");
-                                int moisJour = Integer.parseInt(scanner.nextLine());
-                                System.out.print("Entrez le jour (1-31) : ");
-                                int jour = Integer.parseInt(scanner.nextLine());
-
-                                LocalDateTime debutJour = LocalDateTime.of(anneeJour, moisJour, jour, 0, 0);
-                                LocalDateTime finJour = debutJour.plusDays(1).minusSeconds(1);
-
-                                afficherListe(calendar.eventsDansPeriode(debutJour, finJour));
-                                break;
-                        }
+                        handleView(calendar, scanner);
                         break;
-
                     case "2":
-                        // Ajout simplifié d'un RDV personnel
-                        System.out.print("Titre de l'événement : ");
-                        String titre = scanner.nextLine();
-                        System.out.print("Année (AAAA) : ");
-                        int annee = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Mois (1-12) : ");
-                        int moisRdv = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Jour (1-31) : ");
-                        int jourRdv = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Heure début (0-23) : ");
-                        int heure = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Minute début (0-59) : ");
-                        int minute = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Durée (en minutes) : ");
-                        int duree = Integer.parseInt(scanner.nextLine());
-
-                        calendar.ajouterEvent("RDV_PERSONNEL", titre, utilisateur,
-                                LocalDateTime.of(annee, moisRdv, jourRdv, heure, minute), duree,
-                                "", "", 0);
-
-                        System.out.println("Événement ajouté.");
+                        handleAddAppointment(calendar, scanner, user);
                         break;
-
                     case "3":
-                        // Ajout simplifié d'une réunion
-                        System.out.print("Titre de l'événement : ");
-                        String titre2 = scanner.nextLine();
-                        System.out.print("Année (AAAA) : ");
-                        int annee2 = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Mois (1-12) : ");
-                        int moisRdv2 = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Jour (1-31) : ");
-                        int jourRdv2 = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Heure début (0-23) : ");
-                        int heure2 = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Minute début (0-59) : ");
-                        int minute2 = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Durée (en minutes) : ");
-                        int duree2 = Integer.parseInt(scanner.nextLine());
-                        System.out.println("Lieu :");
-                        String lieu = scanner.nextLine();
-                        
-                        String participants = utilisateur;
-                        
-                        boolean encore = true;
-                        System.out.println("Ajouter un participant ? (oui / non)");
-                        while (scanner.nextLine().equals("oui"))
-                        {
-                            System.out.print("Participants : " + participants);
-                            participants += ", " + scanner.nextLine();
-                        }
-
-                        calendar.ajouterEvent("REUNION", titre2, utilisateur,
-                                LocalDateTime.of(annee2, moisRdv2, jourRdv2, heure2, minute2), duree2,
-                                lieu, participants, 0);
-
-                        System.out.println("Événement ajouté.");
+                        handleAddMeeting(calendar, scanner, user);
                         break;
-
-                        case "4":
-                        // Ajout simplifié d'une réunion
-                        System.out.print("Titre de l'événement : ");
-                        String titre3 = scanner.nextLine();
-                        System.out.print("Année (AAAA) : ");
-                        int annee3 = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Mois (1-12) : ");
-                        int moisRdv3 = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Jour (1-31) : ");
-                        int jourRdv3 = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Heure début (0-23) : ");
-                        int heure3 = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Minute début (0-59) : ");
-                        int minute3 = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Frequence (en jours) : ");
-                        int frequence = Integer.parseInt(scanner.nextLine());
-
-                        calendar.ajouterEvent("PERIODIQUE", titre3, utilisateur,
-                                LocalDateTime.of(annee3, moisRdv3, jourRdv3, heure3, minute3), 0,
-                                "", "", frequence);
-
-                        System.out.println("Événement ajouté.");
+                    case "4":
+                        handleAddPeriodic(calendar, scanner);
                         break;
-
+                    case "5":
+                        handleDelete(calendar, scanner);
+                        break;
                     default:
-                        System.out.println("Déconnexion ! Voulez-vous continuer ? (O/N)");
-                        continuer = scanner.nextLine().trim().equalsIgnoreCase("oui");
-
-                        utilisateur = null;
+                        user = null;
                 }
             }
         }
     }
 
-    private static void afficherListe(List<Event> evenements) {
-        if (evenements.isEmpty()) {
-            System.out.println("Aucun événement trouvé pour cette période.");
-        } else {
-            System.out.println("Événements trouvés : ");
-            for (Event e : evenements) {
-                System.out.println("- " + e.description());
-            }
+    private static void handleView(CalendarManager calendar, Scanner scanner) {
+        System.out.println("1 - All events");
+        System.out.println("2 - By month");
+        System.out.println("3 - By week");
+        System.out.println("4 - By day");
+        System.out.print("Choice: ");
+
+        switch (scanner.nextLine()) {
+            case "1":
+                List<Event> conflicts = calendar.findConflicts();
+                calendar.eventsInPeriod(
+                        EventDateTime.of(LocalDateTime.MIN),
+                        EventDateTime.of(LocalDateTime.MAX)
+                ).forEach(e -> {
+                    String prefix = conflicts.contains(e) ? "[CONFLICT] " : "- ";
+                    System.out.println(prefix + e.description());
+                });
+                break;
+            case "2":
+                System.out.print("Year: ");
+                int year = Integer.parseInt(scanner.nextLine());
+                System.out.print("Month (1-12): ");
+                int month = Integer.parseInt(scanner.nextLine());
+                EventDateTime startMonth = EventDateTime.of(LocalDateTime.of(year, month, 1, 0, 0));
+                EventDateTime endMonth = EventDateTime.of(LocalDateTime.of(year, month, 1, 0, 0).plusMonths(1).minusSeconds(1));
+                printEvents(calendar.eventsInPeriod(startMonth, endMonth));
+                break;
+            case "3":
+                System.out.print("Year: ");
+                int y = Integer.parseInt(scanner.nextLine());
+                System.out.print("Week number (1-52): ");
+                int week = Integer.parseInt(scanner.nextLine());
+                LocalDateTime weekBase = LocalDateTime.now().withYear(y)
+                        .with(WeekFields.of(Locale.FRANCE).weekOfYear(), week)
+                        .with(WeekFields.of(Locale.FRANCE).dayOfWeek(), 1)
+                        .withHour(0).withMinute(0).withSecond(0);
+                printEvents(calendar.eventsInPeriod(EventDateTime.of(weekBase), EventDateTime.of(weekBase.plusDays(7).minusSeconds(1))));
+                break;
+            case "4":
+                System.out.print("Year: ");
+                int dy = Integer.parseInt(scanner.nextLine());
+                System.out.print("Month: ");
+                int dm = Integer.parseInt(scanner.nextLine());
+                System.out.print("Day: ");
+                int dd = Integer.parseInt(scanner.nextLine());
+                printEvents(calendar.eventsInPeriod(
+                        EventDateTime.of(LocalDateTime.of(dy, dm, dd, 0, 0)),
+                        EventDateTime.of(LocalDateTime.of(dy, dm, dd, 23, 59, 59))
+                ));
+                break;
         }
+    }
+
+    private static void handleAddAppointment(CalendarManager calendar, Scanner scanner, String user) {
+        System.out.print("Title: ");
+        EventTitle title = EventTitle.of(scanner.nextLine());
+        LocalDateTime start = readDateTime(scanner);
+        System.out.print("Duration (minutes): ");
+        EventDuration duration = EventDuration.ofMinutes(Long.parseLong(scanner.nextLine()));
+        calendar.add(new PersonalAppointment(EventId.generate(), title, EventDateTime.of(start), duration));
+        System.out.println("Event added.");
+    }
+
+    private static void handleAddMeeting(CalendarManager calendar, Scanner scanner, String user) {
+        System.out.print("Title: ");
+        EventTitle title = EventTitle.of(scanner.nextLine());
+        LocalDateTime start = readDateTime(scanner);
+        System.out.print("Duration (minutes): ");
+        EventDuration duration = EventDuration.ofMinutes(Long.parseLong(scanner.nextLine()));
+        System.out.print("Location: ");
+        EventLocation location = EventLocation.of(scanner.nextLine());
+
+        List<EventTitle> names = new ArrayList<>();
+        names.add(EventTitle.of(user));
+        System.out.println("Add participant? (yes/no)");
+        while (scanner.nextLine().equals("yes")) {
+            System.out.print("Name: ");
+            names.add(EventTitle.of(scanner.nextLine()));
+            System.out.println("Add another? (yes/no)");
+        }
+        calendar.add(new Meeting(EventId.generate(), title, EventDateTime.of(start), duration, location, Participants.of(names)));
+        System.out.println("Event added.");
+    }
+
+    private static void handleAddPeriodic(CalendarManager calendar, Scanner scanner) {
+        System.out.print("Title: ");
+        EventTitle title = EventTitle.of(scanner.nextLine());
+        LocalDateTime start = readDateTime(scanner);
+        System.out.print("Duration (minutes): ");
+        EventDuration duration = EventDuration.ofMinutes(Long.parseLong(scanner.nextLine()));
+        System.out.print("Frequency (days): ");
+        Frequency frequency = Frequency.everyDays(Long.parseLong(scanner.nextLine()));
+        calendar.add(new PeriodicEvent(EventId.generate(), title, EventDateTime.of(start), duration, frequency));
+        System.out.println("Event added.");
+    }
+
+    private static void handleDelete(CalendarManager calendar, Scanner scanner) {
+        System.out.print("Event ID: ");
+        calendar.remove(EventId.of(scanner.nextLine()));
+        System.out.println("Event deleted.");
+    }
+
+    private static LocalDateTime readDateTime(Scanner scanner) {
+        System.out.print("Year: ");
+        int y = Integer.parseInt(scanner.nextLine());
+        System.out.print("Month (1-12): ");
+        int m = Integer.parseInt(scanner.nextLine());
+        System.out.print("Day: ");
+        int d = Integer.parseInt(scanner.nextLine());
+        System.out.print("Hour (0-23): ");
+        int h = Integer.parseInt(scanner.nextLine());
+        System.out.print("Minute (0-59): ");
+        int min = Integer.parseInt(scanner.nextLine());
+        return LocalDateTime.of(y, m, d, h, min);
+    }
+
+    private static void printEvents(List<Event> events) {
+        if (events.isEmpty()) {
+            System.out.println("No events found.");
+            return;
+        }
+        events.forEach(e -> System.out.println("- " + e.description()));
+    }
+
+    private static void printBanner() {
+        System.out.println(" _____      _                 _            __  __");
+        System.out.println("|  __ \\    | |               | |          |  \\/  |");
+        System.out.println("| |  | | __| | __ _ _ __   __| | __ _ _ __| \\  / | __ _ _ __   __ _  __ _  ___ _ __");
+        System.out.println("| |  | |/ _` |/ _` | '_ \\ / _` |/ _` | '__| |\\/| |/ _` | '_ \\ / _` |/ _` |/ _ \\ '__|");
+        System.out.println("| |__| | (_| | (_| | | | | (_| | (_| | |  | |  | | (_| | | | | (_| | (_| |  __/ |");
+        System.out.println("|_____/ \\__,_|\\__,_|_| |_|\\__,_|\\__,_|_|  |_|  |_|\\__,_|_| |_|\\__,_|\\__, |\\___|_|");
+        System.out.println("                                                                        __/ |");
+        System.out.println("                                                                       |___/");
     }
 }
