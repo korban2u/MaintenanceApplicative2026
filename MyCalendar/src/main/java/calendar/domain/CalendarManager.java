@@ -24,4 +24,16 @@ public class CalendarManager {
                 .filter(e -> e.occursInPeriod(from, to))
                 .collect(Collectors.toList());
     }
+
+    public boolean hasConflict(Event e1, Event e2) {
+        return e1.start().isBefore(e2.end()) && e1.end().isAfter(e2.start());
+    }
+
+    public List<Event> findConflicts() {
+        return events.stream()
+                .filter(e1 -> events.stream()
+                        .filter(e2 -> !e2.id().equals(e1.id()))
+                        .anyMatch(e2 -> hasConflict(e1, e2)))
+                .collect(Collectors.toList());
+    }
 }
