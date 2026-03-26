@@ -1,6 +1,8 @@
 package calendar.domain;
 
 import calendar.domain.value.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class Meeting implements Event {
 
@@ -11,8 +13,14 @@ public final class Meeting implements Event {
     private final EventLocation location;
     private final Participants participants;
 
-    public Meeting(EventId id, EventTitle title, EventDateTime start, EventDuration duration,
-                   EventLocation location, Participants participants) {
+    @JsonCreator
+    public Meeting(
+            @JsonProperty("id") EventId id,
+            @JsonProperty("title") EventTitle title,
+            @JsonProperty("start") EventDateTime start,
+            @JsonProperty("duration") EventDuration duration,
+            @JsonProperty("location") EventLocation location,
+            @JsonProperty("participants") Participants participants) {
         this.id = id;
         this.title = title;
         this.start = start;
@@ -22,19 +30,25 @@ public final class Meeting implements Event {
     }
 
     @Override
+    @JsonProperty("id")
     public EventId id() { return id; }
 
     @Override
+    @JsonProperty("title")
     public EventTitle title() { return title; }
 
     @Override
+    @JsonProperty("start")
     public EventDateTime start() { return start; }
 
     @Override
+    @JsonProperty("duration")
     public EventDuration duration() { return duration; }
 
+    @JsonProperty("location")
     public EventLocation location() { return location; }
 
+    @JsonProperty("participants")
     public Participants participants() { return participants; }
 
     @Override

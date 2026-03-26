@@ -1,5 +1,8 @@
 package calendar.domain.value;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -15,6 +18,7 @@ public final class EventId {
         return new EventId(UUID.randomUUID());
     }
 
+    @JsonCreator
     public static EventId of(String value) {
         return new EventId(UUID.fromString(value));
     }
@@ -31,6 +35,7 @@ public final class EventId {
         return Objects.hash(value);
     }
 
+    @JsonValue
     @Override
     public String toString() {
         return value.toString();

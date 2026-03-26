@@ -1,5 +1,8 @@
 package calendar.domain.value;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -17,8 +20,14 @@ public final class Participants {
         return new Participants(Arrays.asList(names));
     }
 
+    @JsonCreator
     public static Participants of(List<EventTitle> names) {
         return new Participants(names);
+    }
+
+    @JsonValue
+    public List<EventTitle> toList() {
+        return names;
     }
 
     @Override

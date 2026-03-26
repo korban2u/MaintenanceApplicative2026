@@ -1,6 +1,8 @@
 package calendar.domain;
 
 import calendar.domain.value.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.stream.Stream;
 
@@ -12,8 +14,13 @@ public final class PeriodicEvent implements Event {
     private final EventDuration duration;
     private final Frequency frequency;
 
-    public PeriodicEvent(EventId id, EventTitle title, EventDateTime start, EventDuration duration,
-                         Frequency frequency) {
+    @JsonCreator
+    public PeriodicEvent(
+            @JsonProperty("id") EventId id,
+            @JsonProperty("title") EventTitle title,
+            @JsonProperty("start") EventDateTime start,
+            @JsonProperty("duration") EventDuration duration,
+            @JsonProperty("frequency") Frequency frequency) {
         this.id = id;
         this.title = title;
         this.start = start;
@@ -22,17 +29,22 @@ public final class PeriodicEvent implements Event {
     }
 
     @Override
+    @JsonProperty("id")
     public EventId id() { return id; }
 
     @Override
+    @JsonProperty("title")
     public EventTitle title() { return title; }
 
     @Override
+    @JsonProperty("start")
     public EventDateTime start() { return start; }
 
     @Override
+    @JsonProperty("duration")
     public EventDuration duration() { return duration; }
 
+    @JsonProperty("frequency")
     public Frequency frequency() { return frequency; }
 
     @Override

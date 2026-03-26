@@ -4,6 +4,8 @@ import calendar.domain.value.EventDateTime;
 import calendar.domain.value.EventDuration;
 import calendar.domain.value.EventId;
 import calendar.domain.value.EventTitle;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class PersonalAppointment implements Event {
 
@@ -12,7 +14,12 @@ public final class PersonalAppointment implements Event {
     private final EventDateTime start;
     private final EventDuration duration;
 
-    public PersonalAppointment(EventId id, EventTitle title, EventDateTime start, EventDuration duration) {
+    @JsonCreator
+    public PersonalAppointment(
+            @JsonProperty("id") EventId id,
+            @JsonProperty("title") EventTitle title,
+            @JsonProperty("start") EventDateTime start,
+            @JsonProperty("duration") EventDuration duration) {
         this.id = id;
         this.title = title;
         this.start = start;
@@ -20,15 +27,19 @@ public final class PersonalAppointment implements Event {
     }
 
     @Override
+    @JsonProperty("id")
     public EventId id() { return id; }
 
     @Override
+    @JsonProperty("title")
     public EventTitle title() { return title; }
 
     @Override
+    @JsonProperty("start")
     public EventDateTime start() { return start; }
 
     @Override
+    @JsonProperty("duration")
     public EventDuration duration() { return duration; }
 
     @Override

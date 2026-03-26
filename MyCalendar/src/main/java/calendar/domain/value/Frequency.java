@@ -1,5 +1,8 @@
 package calendar.domain.value;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.Objects;
 
 public final class Frequency {
@@ -10,6 +13,7 @@ public final class Frequency {
         this.days = days;
     }
 
+    @JsonCreator
     public static Frequency everyDays(long days) {
         return new Frequency(days);
     }
@@ -26,6 +30,7 @@ public final class Frequency {
         return new Frequency(365);
     }
 
+    @JsonValue
     public long toDays() {
         return days;
     }

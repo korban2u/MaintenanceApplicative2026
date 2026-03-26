@@ -1,5 +1,8 @@
 package calendar.domain.value;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.Objects;
 
 public final class EventDuration {
@@ -10,10 +13,12 @@ public final class EventDuration {
         this.minutes = minutes;
     }
 
+    @JsonCreator
     public static EventDuration ofMinutes(long minutes) {
         return new EventDuration(minutes);
     }
 
+    @JsonValue
     public long toMinutes() {
         return minutes;
     }

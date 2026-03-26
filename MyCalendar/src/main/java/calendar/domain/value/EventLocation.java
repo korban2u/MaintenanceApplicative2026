@@ -1,5 +1,8 @@
 package calendar.domain.value;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.Objects;
 
 public final class EventLocation {
@@ -10,6 +13,7 @@ public final class EventLocation {
         this.value = Objects.requireNonNull(value);
     }
 
+    @JsonCreator
     public static EventLocation of(String value) {
         return new EventLocation(value);
     }
@@ -26,6 +30,7 @@ public final class EventLocation {
         return Objects.hash(value);
     }
 
+    @JsonValue
     @Override
     public String toString() {
         return value;

@@ -1,5 +1,8 @@
 package calendar.domain.value;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -13,6 +16,11 @@ public final class EventDateTime {
 
     public static EventDateTime of(LocalDateTime value) {
         return new EventDateTime(value);
+    }
+
+    @JsonCreator
+    public static EventDateTime parse(String iso) {
+        return new EventDateTime(LocalDateTime.parse(iso));
     }
 
     public EventDateTime plusMinutes(EventDuration duration) {
@@ -43,6 +51,7 @@ public final class EventDateTime {
         return Objects.hash(value);
     }
 
+    @JsonValue
     @Override
     public String toString() {
         return value.toString();
